@@ -1,0 +1,5 @@
+<termination>
+    <terminationCompositionStyle>OR</terminationCompositionStyle>
+    <secondsSpentLimit>3</secondsSpentLimit>
+    <bestScoreLimit>0</bestScoreLimit>
+</termination>
