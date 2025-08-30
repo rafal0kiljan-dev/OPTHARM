@@ -9,7 +9,7 @@
             <id>central</id>
             <url>https://repo.maven.apache.org/maven2</url>
         </repository>
-        <!-- inne repozytoria, jeśli są używane -->
+        
     </repositories>
 
   <groupId>gen</groupId>
@@ -122,3 +122,4 @@
     </pluginManagement>
   </build>
 </project>
+
