@@ -1,6 +1,4 @@
 package gen;
-
-//import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -8,16 +6,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 import java.util.stream.*;
-
-//import org.drools.model.functions.Function0.Null;
 import org.optaplanner.core.api.domain.solution.PlanningSolution;
 import org.optaplanner.core.impl.heuristic.selector.common.decorator.SelectionSorterWeightFactory;
-
 import gen.GenAl.Individual;
-
 import org.optaplanner.core.api.score.buildin.simple.SimpleScore;
-
-//import javax.xml.stream.events.StartElement;
 
 public class GenAl {
 
@@ -56,16 +48,13 @@ public class GenAl {
             Satelite mutGen = createGen(randGen, sat);
             newGen.add(mutGen);
             genotyp.addAll(newGen);
-            // System.out.println("Accept" + "\n");
         }
 
         public void mutRem(List<Satelite> genotyp) {
             Random r_gen = new Random();
             int rand_gen = r_gen.nextInt(genotyp.size());
             Satelite randGen = genotyp.get(rand_gen);
-            // System.out.println("MutRem" + genotyp.get(rand_gen).id);
             genotyp.remove(randGen);
-
         }
 
         public Comparable<Integer> createSorterWeight(Individual individual, Individual individual2) {
@@ -83,9 +72,6 @@ public class GenAl {
 
     void fillingGenotyp(Individual individual, List<Satelite> satelites) {
         int sizeGenotyp = individual.genotyp.size();
-        // int looptime = 0;
-        // boolean found = false;
-        // List<String> arStrings = new ArrayList<>();
         List<Satelite> addArr = new ArrayList<>();
         List<Satelite> remArr = new ArrayList<>();
         for (int i = 0; i < satelites.size(); i++) {
@@ -96,59 +82,24 @@ public class GenAl {
                     remArr.add(sat);
                     break;
                 }
-
             }
         }
         addArr.removeAll(remArr);
-
         List<Satelite> newGen = new ArrayList<>();
         for (Satelite ar : addArr) {
             if (individual.genotyp.size() == sizeGenotyp + 1) {
-
                 break;
             }
             Satelite mutGen = createGen(ar, individual.genotyp);
             newGen.add(mutGen);
         }
-        /*
-         * List<Satelite> new2Gen = new ArrayList<>();
-         * for (int i = 0; i < newGen.size(); i++) {
-         * new2Gen.add(newGen.get(i));
-         * }
-         * for (int i = 0; i < individual.genotyp.size(); i++) {
-         * for (int j = 0; j < individual.genotyp.get(i).series.length; j++) {
-         * for (Satelite arr : newGen) {
-         * for (int k = 0; k < arr.series.length; k++) {
-         * if (individual.genotyp.get(i).series[j] <= arr.series[k] &&
-         * (individual.genotyp.get(i).series[j]
-         * + individual.genotyp.get(i).singleSeries <= arr.series[k] + arr.singleSeries
-         * || individual.genotyp.get(i).series[j]
-         * + individual.genotyp.get(i).singleSeries >= arr.series[k] + arr.singleSeries)
-         * || (individual.genotyp.get(i).series[j] >= arr.series[k]
-         * && individual.genotyp.get(i).series[j]
-         * + individual.genotyp.get(i).singleSeries <= arr.series[k]
-         * + arr.singleSeries)) {
-         * new2Gen.remove(arr);
-         * }
-         * }
-         * }
-         * }
-         * 
-         * }
-         */
-
         individual.genotyp.addAll(newGen);
-
         checkInd(individual);
-
-        // checkInd(individual);
     }
-
     void checkInd(Individual ind) {
         List<Satelite> arRem = new ArrayList<>();
         for (int i = 0; i < ind.genotyp.size(); i++) {
             Satelite gen = ind.genotyp.get(i);
-            // System.out.println("Accept" + gen.id + "\n");
             for (int j = 0; j < gen.numSeries; j++) {
                 for (int k = i + 1; k < ind.genotyp.size(); k++) {
                     Satelite rem = ind.genotyp.get(k);
@@ -163,11 +114,6 @@ public class GenAl {
                                 arRem.add(rem);
                             }
                         }
-                        // System.out.println("Accept" + gen.id + " " + ind.genotyp.get(k).id + " " + l
-                        // + "\n");
-                        // if (rem.series.length == 2 * rem.numSeries + 2) {
-                        // arRem.add(rem);
-                        // }
                         int s = rem.series[l] + 180;
                         double e = rem.series[l] + rem.singleSeries - 180;
                         if (l > j && l < gen.numSeries
@@ -186,25 +132,15 @@ public class GenAl {
                                     || (s >= gen.series[j] && s <= gen.series[j] + gen.singleSeries)) {
                                 arRem.add(rem);
                             }
-
                         }
-
-                        // System.out.println("none" + rem.id + "\n");
-
                     }
                 }
             }
         }
-        // for (int i = 0; i < arRem.size(); i++) {
-        // if (i > (arRem.size() / 2) - 1) {
-        // arRem.remove(i);
-        // i--;
-        // }
-        // }
+
         ind.genotyp.removeAll(arRem);
         ind.phenotyp = getPhenotypes(ind.genotyp);
     }
-
     static Satelite createGen(Satelite gen, List<Satelite> genotyp) {
         int k = 0;
         int critic = 0;
@@ -237,9 +173,7 @@ public class GenAl {
                 gen.priority, gen.minSeperation,
                 gen.winStart, gen.winEnd, gen.winNum, gen.order,
                 gen.series, gen.betweenDay));
-
     }
-
     public List<Satelite> createInd(List<Satelite> genotyp) {
         List<Satelite> newGen = new ArrayList<>();
         for (Satelite gen : genotyp) {
@@ -247,46 +181,24 @@ public class GenAl {
         }
         genotyp.clear();
         genotyp.addAll(newGen);
-        /*
-         * for (Satelite gen : genotyp) {
-         * System.out.println("ID " + gen.id + " priority " + gen.priority + " Series "
-         * + gen.series[0] + "\n");
-         * }
-         */
         return genotyp;
     }
-
     int getPhenotypes(List<Satelite> genotyp) {
         int phenotyp = 0;
-        // int costes = 0;
         for (Satelite gen : genotyp) {
-            // for (int i = 0; i < gen.numSeries; i++) {
-            // int k = 0;
-            // if (gen.series[i] > 0) {
-            // k = 10;
-            // }
-            // phenotyp += gen.priority * gen.singleSeries;
-            // costes += gen.singleSeries * k;
-            // }
             phenotyp += gen.priority * gen.singleSeries * gen.numSeries;
         }
-        // phenotyp = (phenotyp * 150) - (costes / 150);
-        // System.out.println(phenotyp + "\n");
         return phenotyp;
     }
-
     class SortChromosom implements Comparator<Individual> {
         public int compare(Individual a, Individual b) {
             return b.phenotyp - a.phenotyp;
         }
     }
-
     public List<Individual> individuals;
-
     public GenAl() {
         this.individuals = individuals;
     }
-
     public Individual getBestInd(List<Individual> individuals, List<Satelite> sat, boolean showT) {
         Individual best = individuals.get(0);
         for (int i = 0; i < individuals.size(); i++) {
@@ -305,7 +217,6 @@ public class GenAl {
         }
         return best;
     }
-
     void createFirstPopulation(List<Satelite> genotyp, List<Individual> individuals) {
         List<Individual> newInds = new ArrayList<>();
         for (int i = 0; i < individuals.size(); i++) {
@@ -314,23 +225,12 @@ public class GenAl {
                 newInds.remove(i);
                 i--;
             }
-            /*
-             * for (Individual ind : newInds) {
-             * for (Satelite gn : ind.genotyp) {
-             * System.out.println(
-             * "Id- " + gn.id + " P- " + gn.priority + " S- " + gn.series[0]);
-             * }
-             * System.out.println("\n");
-             * }
-             */
         }
         individuals.clear();
         individuals.addAll(newInds);
     }
-
     void selection(List<Individual> individuals, int alive) {
         for (int i = 0; i < individuals.size(); i++) {
-            // checkInd(individuals.get(i));
             if (i > alive) {
                 individuals.remove(i);
                 i--;
@@ -338,7 +238,6 @@ public class GenAl {
         }
         Collections.sort(individuals, new SortChromosom());
     }
-
     void nextGeneration(List<Individual> individuals, long halftime, List<Satelite> sat) {
         List<Individual> childs = new ArrayList<>();
         int k = 0;
@@ -349,7 +248,6 @@ public class GenAl {
                 for (int i = 0; i < individuals.size() - 1; i++) {
                     Individual parent1 = individuals.get(h);
                     Individual parent2 = individuals.get(i + 1);
-                    // System.out.println("Parent- " + i + "\n");
                     List<Satelite> childGen = new ArrayList<>();
                     for (Satelite gen1 : parent1.genotyp) {
                         int mmax = 0;
@@ -359,10 +257,6 @@ public class GenAl {
                             }
                         }
                         if (gen1.series[mmax] + gen1.singleSeries < new_half + 180) {
-                            // System.out.println(
-                            // "ID-1 " + gen1.id + " P- " + gen1.priority + " S- " +
-                            // gen1.series[0]
-                            // + " K- " + k);
                             childGen.add(k, gen1);
                             k++;
                         }
@@ -375,10 +269,6 @@ public class GenAl {
                             }
                         }
                         if (gen2.series[mmin] + gen2.singleSeries > new_half - 180) {
-                            // System.out.println(
-                            // "ID-2 " + gen2.id + " P- " + gen2.priority + " S- " +
-                            // gen2.series[0]
-                            // + " K- " + k);
                             childGen.add(k, gen2);
                             k++;
                         }
@@ -391,15 +281,12 @@ public class GenAl {
                     if (mutator.createSorterWeight(mutant, child) != child
                             && getPhenotypes(mutant.genotyp) >= getPhenotypes(child.genotyp)) {
                         childs.add(mutant);
-                        // System.out.println("Mut-Positive \n");
                     } else {
                         childs.add(child);
-                        // System.out.println("Mut-Negative \n");
                     }
                 }
             }
         }
-        // System.out.println("All " + childs.size() + "\n");
         for (int i = 0; i < 1000; i++) {
             List<Satelite> genotypes = new ArrayList<>();
             for (Satelite sattle : sat) {
@@ -414,8 +301,7 @@ public class GenAl {
             checkInd(firstInd);
             childs.add(firstInd);
         }
-        // System.out.println("All " + childs.size() + "\n");
         individuals.addAll(childs);
-        // System.out.println("All " + individuals.size() + "\n");
     }
 }
+
