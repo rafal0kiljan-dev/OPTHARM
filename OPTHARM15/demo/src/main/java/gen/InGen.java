@@ -79,8 +79,6 @@ public class InGen {
         int numStartPopulity = inGen.getNumStartPopulity();
         long timeMili = inGen.getTimeMili();
         int numSatalites = inGen.getNumSatalites();
-        // System.out.println("numStartPopulity: " + numStartPopulity);
-        // System.out.println("numGeneration: " + timeMili);
-        // System.out.println("numGeneration: " + numSatalites);
     }
 }
+
