@@ -7,18 +7,13 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.Scanner;
 import java.util.ArrayList;
-//import java.util.Arrays;
 import java.time.Instant;
 import java.time.ZoneOffset;
-//import java.time.ZonedDateTime;
 import java.time.LocalTime;
-//import java.time.ZoneId;
 import java.time.LocalDate;
-//import java.time.LocalDateTime;
 
 import org.shredzone.*;
 import org.shredzone.commons.suncalc.MoonIllumination;
-//import org.shredzone.commons.suncalc.MoonPhase;
 import org.shredzone.commons.suncalc.MoonTimes;
 import org.shredzone.commons.suncalc.SunTimes;
 
@@ -99,35 +94,16 @@ public class App {
                                         mend[k] = mcolT;
                                         mstart[k + 1] = mcolT + (int) (30000 * percent);
                                         mend[k + 1] = sat.winEnd[i];
-
-                                        // System.out
-                                        // .println(sat.id + " " + mstart[k] + " " + mend[k] + " " + mstart[k + 1]
-                                        // + " " + mend[k + 1] + " K " + k + "\n");
                                         k += 2;
                                     } else {
                                         mstart[k] = sat.winStart[i];
                                         mend[k] = sat.winEnd[i];
-                                        // System.out
-                                        // .println(sat.id + " " + mstart[k] + " " + mend[k] + " " + mstart[k + 1]
-                                        // + " " + mend[k + 1] + " K " + k + "\n");
                                     }
-                                    // System.out.println(sat.id + " " + mstart[k] + " " + mend[k] + " " +
-                                    // sat.winStart[i]
-                                    // + " " + sat.winEnd[i] + "\n");
                                     k++;
                                 }
                             }
                             sat.winEnd = mend;
                             sat.winStart = mstart;
-                            /*
-                             * if (sat.id.equals(mid)) {
-                             * for (int n = 0; n < sat.winStart.length; n++) {
-                             * System.out
-                             * .println(sat.id + " " + sat.winStart[n] + " " + sat.winEnd[n] + "\n");
-                             * }
-                             * }
-                             */
-
                         }
                     }
                 }
@@ -135,7 +111,6 @@ public class App {
             } catch (Exception e) {
                 System.out.println("Don't find file moon_pmt.csv \n");
             }
-
         }
     }
 
@@ -199,10 +174,6 @@ public class App {
     }
 
     public static void main(String[] args) throws Exception {
-        /*
-         * Odczyt z plików night_conf.csv
-         * Dyskretyzacja czasu
-         */
         File confFile = new File("demo\\night_conf.csv");
         Scanner inConf = new Scanner(confFile);
         String str_conf;
@@ -229,15 +200,10 @@ public class App {
         inConf.close();
         int snt = start_night.getHour() * 3_600_000 + start_night.getMinute() * 60_000 +
                 start_night.getSecond() * 1_000 + start_night.getNano() / 1_000_000;
-        /*
-         * Odczyt z plików satelite_pmt.csv i window_pmt.csv
-         * Tworzenie listy obiektów: satelite
-         */
         String str_sat;
         String[] token_sat;
         String str_win;
         String[] token_win;
-        // liczba okien 0 to 1
         int a = 0;
         ArrayList<Satelite> satelites = new ArrayList<>();
 
@@ -252,8 +218,6 @@ public class App {
                 str_win = inWin.nextLine();
                 token_win = str_win.split(",");
                 String id = token_sat[0];
-                // System.out.println(token_sat[1] + " \n");
-                // System.out.println(token_win[1] + " \n");
                 int checkA = Integer.parseInt(token_sat[0]);
                 int checkB = Integer.parseInt(token_sat[0]);
                 if (checkA == checkB) {
@@ -294,7 +258,6 @@ public class App {
                     Satelite satelite = new Satelite(id, singleSeries, numSeries, priority, minSeperation,
                             winStart, winEnd, a, order, series, betweenDay);
                     satelites.add(satelite);
-                    // Collections.sort(satelites, satelite.order);
                 } else {
                     a++;
                 }
@@ -315,12 +278,9 @@ public class App {
         GenAl GA = new GenAl();
         List<GenAl.Individual> individuals = new ArrayList<>();
         List<GenAl.Individual> newInd = new ArrayList<>();
-
         InGen setGen = new InGen();
         int numPop = setGen.getNumStartPopulity();
         System.out.println(numPop + " \n");
-        // int numGeneration = setGen.getGeneration();
-        // System.out.println(numGeneration + " \n");
         for (int i = 0; i < numPop; i++) {
             List<Satelite> genotypes = new ArrayList<>();
             for (Satelite sat : satelites) {
@@ -360,18 +320,9 @@ public class App {
 
         GenAl.Individual best_ind = GA.getBestInd(individuals, satelites, true);
         Collections.sort(best_ind.genotyp, new SortbyTime());
-        // GA.checkInd(best_ind);
-        // Koniec algrorytmu genetycznego
-        // Zapisywanie wyników do pliku results.csv
         FileWriter outResults = new FileWriter("results.csv");
         a = 0;
         satStatistic(best_ind.genotyp, satelites);
-        // int allTime = 0;
-        // for (Satelite bsat : best_ind.genotyp) {
-        // allTime = allTime + (int) Math.ceil(bsat.singleSeries * bsat.series.length);
-        // }
-        // System.out.println("Time " + allTime));
-
         for (Satelite outSat : best_ind.genotyp) {
             for (int i = 0; i < outSat.numSeries; i++) {
                 long tmp1 = 0;
@@ -420,12 +371,11 @@ public class App {
                                             + second_day + "T" + book_time2 + "\n");
                         }
                     }
-
                 }
-                // a++;
             }
         }
         outResults.flush();
         outResults.close();
     }
 }
+
